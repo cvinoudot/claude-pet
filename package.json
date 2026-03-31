@@ -1,0 +1,12 @@
+{
+  "name": "claude-pet",
+  "version": "1.0.0",
+  "description": "Pixel tamagotchi pet for Claude Code",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^28.0.0"
+  }
+}

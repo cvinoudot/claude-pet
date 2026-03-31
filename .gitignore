@@ -1,0 +1,6 @@
+node_modules/
+pet-state.json
+tray-icon.png
+.DS_Store
+*.log
+.claude/

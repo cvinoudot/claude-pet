@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 140px;
+      height: 140px;
+      background: transparent;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #pet-canvas {
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      cursor: pointer;
+    }
+    #xp-bar-wrap {
+      position: absolute;
+      bottom: 4px;
+      left: 10px;
+      right: 10px;
+      height: 4px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    #xp-bar {
+      height: 100%;
+      background: #7fff7f;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+    #speech-bubble {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      right: 2px;
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      color: #fff;
+      text-align: center;
+      background: rgba(0,0,0,0.55);
+      border-radius: 6px;
+      padding: 2px 4px;
+      display: none;
+      line-height: 1.2;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="pet-canvas" width="140" height="130"></canvas>
+  <div id="xp-bar-wrap"><div id="xp-bar" style="width:0%"></div></div>
+  <div id="speech-bubble"></div>
+  <script src="renderer.js"></script>
+</body>
+</html>
