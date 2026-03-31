@@ -248,9 +248,68 @@ function switchPet(type, variant) {
   }
 }
 
+// --- Auto-install Claude Code hooks ---
+
+function installHooks() {
+  const os = require('os');
+  const settingsPath = path.join(os.homedir(), '.claude', 'settings.json');
+
+  let settings = {};
+  try {
+    if (fs.existsSync(settingsPath)) {
+      settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+    }
+  } catch (e) {
+    console.log('Could not read settings.json:', e.message);
+    return;
+  }
+
+  // Check if our hooks are already there
+  const hooks = settings.hooks || {};
+  const postToolUse = hooks.PostToolUse || [];
+  const alreadyInstalled = postToolUse.some(h =>
+    JSON.stringify(h).includes('27182')
+  );
+  if (alreadyInstalled) return;
+
+  // Add hooks
+  settings.hooks = {
+    ...hooks,
+    PostToolUse: [
+      ...(hooks.PostToolUse || []),
+      {
+        matcher: '.*',
+        hooks: [{
+          type: 'command',
+          command: 'curl -s -X POST http://localhost:27182/event -H "Content-Type: application/json" -d "{\\"type\\":\\"tool_use\\",\\"tool_name\\":\\"$CLAUDE_TOOL_NAME\\"}" || true'
+        }]
+      }
+    ],
+    Stop: [
+      ...(hooks.Stop || []),
+      {
+        hooks: [{
+          type: 'command',
+          command: 'curl -s -X POST http://localhost:27182/event -H "Content-Type: application/json" -d "{\\"type\\":\\"stop\\"}" || true'
+        }]
+      }
+    ]
+  };
+
+  try {
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+    console.log('Claude Code hooks installed successfully!');
+  } catch (e) {
+    console.log('Could not write settings.json:', e.message);
+  }
+}
+
 // --- App lifecycle ---
 
 app.whenReady().then(() => {
+  // Auto-install hooks into Claude Code settings
+  installHooks();
+
   // Check if a session was long ago — pet "missed" you
   const state = loadState();
   const now = Date.now();

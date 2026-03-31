@@ -49,47 +49,15 @@ cd claude-pet
 npm install
 ```
 
-### 3. Configure Claude Code hooks
-
-Add this to `C:\Users\YOUR_NAME\.claude\settings.json`:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "curl -s -X POST http://localhost:27182/event -H \"Content-Type: application/json\" -d \"{\\\"type\\\":\\\"tool_use\\\",\\\"tool_name\\\":\\\"$CLAUDE_TOOL_NAME\\\"}\" || true"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "curl -s -X POST http://localhost:27182/event -H \"Content-Type: application/json\" -d \"{\\\"type\\\":\\\"stop\\\"}\" || true"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-> If you already have other settings in the file, just merge the `hooks` section in.
-
-### 4. Launch the pet
+### 3. Launch the pet
 
 ```bash
 npm start
 ```
 
 A transparent window with your pixel pet will appear in the **bottom-right corner** of your screen. An orange paw 🐾 icon will appear in the system tray.
+
+> **Hooks are installed automatically** on first launch — no manual config needed.
 
 ---
 
