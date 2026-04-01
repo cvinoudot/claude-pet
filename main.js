@@ -129,6 +129,21 @@ function createWindow() {
   win.loadFile('renderer.html');
   win.setIgnoreMouseEvents(true, { forward: true });
 
+  // Keep pet on top even when other windows take focus
+  win.setAlwaysOnTop(true, 'screen-saver');
+
+  // Re-assert on-top when focus changes anywhere in the system
+  win.on('blur', () => {
+    win.setAlwaysOnTop(true, 'screen-saver');
+  });
+
+  // Periodically re-assert always-on-top (catches minimize/restore edge cases on Windows)
+  setInterval(() => {
+    if (win && !win.isDestroyed() && !win.isAlwaysOnTop()) {
+      win.setAlwaysOnTop(true, 'screen-saver');
+    }
+  }, 2000);
+
   // Enable mouse interaction on hover
   win.webContents.on('did-finish-load', () => {
     win.webContents.send('init-state', state);
